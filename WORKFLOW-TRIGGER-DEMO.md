@@ -59,7 +59,16 @@ Replace the email with the exact address ending in `users.noreply.github.com` fr
 ### Reproduce the missed run
 
 1. Confirm the `opened`-only workflow is present on `main` and the initial push succeeded.
-2. Create and push a feature branch: `git switch -c demo/stale-check`, then `git push -u origin demo/stale-check`.
+2. Create a feature branch and make a harmless initial change so it differs from `main` and GitHub will allow a pull request:
+
+   ```powershell
+   git switch -c demo/stale-check
+   Set-Content -Path demo-pr-note.txt -Value "Initial change for the pull request trigger demo."
+   git add demo-pr-note.txt
+   git commit -m "Add initial demo change"
+   git push -u origin demo/stale-check
+   ```
+
 3. Open a pull request from `demo/stale-check` into `main`. The `opened` event should start `npm test`; confirm it passes in the Actions tab.
 4. On the feature branch, temporarily change `subtract` in `src/calculator.js` to return `left + right` instead of `left - right`. Commit and push that change:
 
@@ -74,10 +83,11 @@ Replace the email with the exact address ending in `users.noreply.github.com` fr
 ### Apply and verify the fix
 
 1. Put the corrected trigger on `main`, either with a direct demo-repository commit or by opening and merging a small workflow-fix pull request. Under `pull_request.types`, include `opened`, `synchronize`, and `reopened`.
-2. Restore `subtract` to `return left - right` on the feature branch, then commit and push:
+2. Restore `subtract` to `return left - right` on the feature branch and remove the temporary marker file, then commit and push:
 
    ```powershell
    git add src/calculator.js
+   git rm demo-pr-note.txt
    git commit -m "Restore calculator behavior"
    git push
    ```
