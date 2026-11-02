@@ -6,8 +6,6 @@ on:
       - main
     types:
       - opened
-      - synchronize
-      - reopened
 
 jobs:
   test:
