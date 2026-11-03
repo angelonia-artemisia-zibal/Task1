@@ -7,5 +7,5 @@ test("add returns the sum", () => {
 });
 
 test("subtract returns the difference", () => {
-  assert.equal(subtract(8, 3), 5);
+  assert.equal(subtract(10, 5), 5);
 });
